@@ -1,0 +1,10 @@
+* mangle_names:M_STRIP_PACKAGE
+ToHbc submsg_callback:true
+CalibrationTable.entries max_count:48
+CalibrationTable.entries fixed_count:true
+SetSerialNumber.serial_number max_size:16
+RequestRejected.reason max_size: 32
+RequestRejected.details max_size: 32
+SystemError.details max_size: 64
+Status.state max_size: 16
+LogEntry.text max_size: 128

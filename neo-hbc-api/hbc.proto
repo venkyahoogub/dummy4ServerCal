@@ -1,0 +1,374 @@
+syntax = "proto3";
+
+package Hbc;
+
+message GetAbout {
+}
+
+message About {
+    string version = 1;
+    string bootloader_version = 2;
+    string serial_number = 3;
+    string mac_address = 4;
+    uint32 uptime_ms = 5;
+}
+
+message GetStatus {
+}
+
+message Status {
+    float uv_temperature_c = 1;
+    float nfov_left_temperature_c = 2;
+    float nfov_right_temperature_c = 3;
+    float wfov_temperature_c = 4;
+    float dmd_temperature_c = 5;
+    float ambient_temperature_c = 6;
+    float ambient_humidity_rh = 7;
+    uint32 pd1_count = 8;
+    uint32 pd2_count = 9;
+    uint32 pd3_count = 10;
+    float uv_diode_current_ma = 11;
+    bool uv_diode_relay_is_enabled = 12;
+    bool sbc_is_enabled = 13;
+    bool estop_is_triggered = 14;
+    bool nir_led_is_faulted = 15;
+    float distance_to_target_mm = 16;
+    float motor_x_position_mm = 17;
+    float motor_y_position_mm = 18;
+    float motor_z_position_mm = 19;
+    bool head_fan1_is_faulted = 20;
+    bool head_fan2_is_faulted = 21;
+    bool head_fan3_is_faulted = 22;
+    bool head_fan4_is_faulted = 23;
+    bool head_fan5_is_faulted = 24;
+    bool head_fan6_is_faulted = 25;
+    uint32 uptime_ms = 26;
+    string state = 27;
+}
+
+message GetControls {
+}
+
+message Controls {
+    uint32 nir_led_top_intensity_percent = 1;
+    uint32 nir_led_bot_intensity_percent = 2;
+    uint32 camera_trigger_frequency_hz = 3;
+    uint32 camera_trigger_duration_ms = 4;
+    uint32 fixation_led_intensity_percent = 5;
+    bool uv_fan_enable = 7;
+    bool head_fans_enable = 8;
+}
+
+message GetDeviceSettings {
+}
+
+message DeviceSettings {
+    uint32 pd1_gain_count = 1;
+    uint32 pd2_gain_count = 2;
+    uint32 pd3_gain_count = 3;
+    uint32 pi_gain_count = 4;
+    float distance_sensor_gain = 5;
+    float distance_sensor_offset = 6;
+}
+
+message GetDeviceLimits {
+}
+
+message DeviceLimits {
+    float uv_temperature_upper_limit_c = 1;
+    float uv_temperature_lower_limit_c = 2;
+    float ambient_temperature_upper_limit_c = 3;
+    float ambient_temperature_lower_limit_c = 4;
+    float ambient_humidity_upper_limit_rh = 5;
+    float ambient_humidity_lower_limit_rh = 6;
+    float nfov_left_camera_temperature_upper_limit_c = 7;
+    float nfov_left_camera_temperature_lower_limit_c = 8;
+    float nfov_right_camera_temperature_upper_limit_c = 9;
+    float nfov_right_camera_temperature_lower_limit_c = 10;
+    float wfov_camera_temperature_upper_limit_c = 11;
+    float wfov_camera_temperature_lower_limit_c = 12;
+    float dmd_temperature_upper_limit_c = 13;
+    float dmd_temperature_lower_limit_c = 14;
+}
+
+message BinaryFile {
+    uint32 length_in_bytes = 1;
+    bytes data = 2;
+}
+
+message GetCalibrationTable {
+}
+
+message CalibrationTableEntry {
+    uint32 irradiance_mw_per_cm2 = 1;
+    uint32 dac_count = 2;
+    uint32 pd1_count = 3;
+    uint32 pd2_count = 4;
+    uint32 pd3_count = 5;
+    uint32 current_count = 6;
+}
+
+message CalibrationTable {
+    repeated CalibrationTableEntry entries = 1;
+}
+
+message StartCalibration {
+    uint32 irradiance_mw_per_cm2 = 1;
+    uint32 dac_count = 2;
+}
+
+message CalibrationResult {
+    CalibrationTableEntry entry = 1;
+}
+
+message StartUvDiagnostic {
+    uint32 dac_counts = 1;
+    uint32 duration_ms = 2;
+}
+
+message CancelUvDiagnostic {
+}
+
+message DiagnosticResult {
+    SensorTelemetry sensor_telemetry = 1;
+}
+
+message StartSelfTest {
+    uint32 irradiance_mw_per_cm2 = 1;
+}
+
+message SelfTestResult {
+    ValueOutOfRange pd1_error = 1;
+    ValueOutOfRange pd2_error = 2;
+    ValueOutOfRange pd3_error = 3;
+    HardwareFault x_motor_error = 4;
+    HardwareFault y_motor_error = 5;
+    HardwareFault z_motor_error = 6;
+}
+
+message StartPulsedTreatment {
+    uint32 irradiance_mw_per_cm2 = 1;
+    uint32 pulse_on_time_ms = 2;
+    uint32 pulse_off_time_ms = 3;
+    uint32 treatment_time_ms = 4;
+}
+
+message StartCwTreatment {
+    uint32 irradiance_mw_per_cm2 = 1;
+    uint32 treatment_time_ms = 2;
+}
+
+message StartDemoTreatment {
+    uint32 treatment_time_ms = 1;
+}
+
+message TreatmentStarted {
+}
+
+message PauseTreatment {
+}
+
+message TreatmentPaused {
+    uint32 remaining_treatment_time_ms = 1;
+}
+
+message ResumeTreatment {
+}
+
+message TreatmentResumed {
+    uint32 remaining_treatment_time_ms = 1;
+}
+
+message CancelTreatment {
+}
+
+message TreatmentCanceled {
+    uint32 remaining_treatment_time_ms = 1;
+}
+
+message Metrics {
+    float recent_sample = 1;
+    float max = 2;
+    float min = 3;
+    float mean = 4;
+    float std_dev = 5;
+    uint32 num_samples = 6;
+}
+
+message SensorTelemetry {
+    Metrics pd1 = 1;
+    Metrics pd2 = 2;
+    Metrics pd3 = 3;
+    Metrics current = 4;
+}
+
+message TreatmentResult {
+    SensorTelemetry sensor_telemetry = 1;
+    CalibrationTableEntry calibration_table_entry = 2;
+    uint32 elapsed_treatment_time_ms = 3;
+}
+
+message MoveMotors {
+    float x_position_mm = 1;
+    float y_position_mm = 2;
+    float z_position_mm = 3;
+}
+
+message HomeMotors {
+}
+
+message MotorsHomed {
+}
+
+message SetFanControls {
+    bool uv_fan_enable = 1;
+    bool head_fans_enable = 2;
+}
+
+message SetNirLedControls {
+    uint32 top_intensity_percent = 1;
+    uint32 bot_intensity_percent = 2;
+}
+
+message SetFixationLedControls {
+    uint32 intensity_percent = 1;
+}
+
+message SetCameraTriggerControls {
+    uint32 frequency_hz = 1;
+    uint32 duration_ms = 2;
+}
+
+message DistanceSensorStartRanging {
+}
+
+message DistanceSensorStopRanging {
+}
+
+message DistanceSensorRangingResult {
+    float distance_to_target_mm = 1;
+}
+
+message SetDistanceSensorDeviceSettings {
+    float gain = 1;
+    float offset = 2;
+}
+
+message SetUvDeviceSettings {
+    uint32 pd1_gain_count = 1;
+    uint32 pd2_gain_count = 2;
+    uint32 pd3_gain_count = 3;
+    uint32 pi_gain_count = 4;
+}
+
+message SetSerialNumber {
+    string serial_number = 1;
+}
+
+message ValueOutOfRange {
+    float measured_value = 1;
+    float upper_limit = 2;
+    float lower_limit = 3;
+}
+
+message HardwareFault {
+    bool is_faulted = 1;
+}
+
+message Timeout {
+}
+
+message SystemError {
+    oneof e {
+        ValueOutOfRange pd1_error = 1;
+        ValueOutOfRange pd2_error = 2;
+        ValueOutOfRange pd3_error = 3;
+        ValueOutOfRange uv_temperature_error = 4;
+        ValueOutOfRange dmd_temperature_error = 5;
+        ValueOutOfRange ambient_temperature_error = 6;
+        ValueOutOfRange wfov_temperature_error = 7;
+        ValueOutOfRange nfov_left_temperature_error = 8;
+        ValueOutOfRange nfov_right_temperature_error = 9;
+        HardwareFault uv_fan_error = 10;
+        HardwareFault head_fan1_error = 11;
+        HardwareFault head_fan2_error = 12;
+        HardwareFault head_fan3_error = 13;
+        HardwareFault head_fan4_error = 14;
+        HardwareFault head_fan5_error = 15;
+        HardwareFault head_fan6_error = 16;
+        HardwareFault x_motor_error = 17;
+        HardwareFault y_motor_error = 18;
+        HardwareFault z_motor_error = 19;
+        HardwareFault nir_led_error = 20;
+        Timeout motor_homing_error = 21;
+    }
+    string details = 1024;
+}
+
+message RequestRejected {
+    uint32 to_hbc_which_oneof_tag = 1;
+    string reason = 2;
+    string details = 3;
+}
+
+message LogEntry {
+    uint32 timestamp_ms = 1;
+    string text = 2;
+}
+
+message ToHbc {
+    oneof msg {
+        GetAbout get_about = 1;
+        GetStatus get_status = 2;
+        GetControls get_controls = 3;
+        GetDeviceSettings get_device_settings = 4;
+        GetDeviceLimits get_device_limits = 5;
+        BinaryFile firmware_image = 6;
+        GetCalibrationTable get_calibration_table = 7;
+        StartCalibration start_calibration = 8;
+        StartUvDiagnostic start_uv_diagnostic = 9;
+        CancelUvDiagnostic cancel_uv_diagnostic = 10;
+        StartSelfTest start_self_test = 11;
+        StartPulsedTreatment start_pulsed_treatment = 12;
+        StartCwTreatment start_cw_treatment = 13;
+        StartDemoTreatment start_demo_treatment = 14;
+        PauseTreatment pause_treatment = 15;
+        ResumeTreatment resume_treatment = 16;
+        CancelTreatment cancel_treatment = 17;
+        MoveMotors move_motors = 18;
+        SetFanControls set_fan_controls = 19;
+        SetNirLedControls set_nir_led_controls = 20;
+        SetFixationLedControls set_fixation_led_controls = 21;
+        SetCameraTriggerControls set_camera_trigger_controls = 22;
+        DistanceSensorStartRanging distance_sensor_start_ranging = 23;
+        DistanceSensorStopRanging distance_sensor_stop_ranging = 24;
+        SetDistanceSensorDeviceSettings set_distance_sensor_device_settings = 25;
+        SetUvDeviceSettings set_uv_device_settings = 26;
+        SetSerialNumber set_serial_number = 27;
+        HomeMotors home_motors = 28;
+    }
+}
+
+message FromHbc {
+    oneof msg {
+        About about = 1;
+        Status status = 2;
+        Controls controls = 3;
+        DeviceSettings device_settings = 4;
+        DeviceLimits device_limits = 5;
+        CalibrationTable calibration_table = 6;
+        CalibrationResult calibration_result = 7;
+        SelfTestResult self_test_result = 8;
+        DistanceSensorRangingResult distance_sensor_ranging_result = 9;
+        TreatmentStarted treatment_started = 10;
+        TreatmentPaused treatment_paused = 11;
+        TreatmentResumed treatment_resumed = 12;
+        TreatmentCanceled treatment_canceled = 13;
+        TreatmentResult treatment_result = 14;
+        DiagnosticResult diagnostic_result = 15;
+        SystemError system_error = 16;
+        RequestRejected request_rejected = 17;
+        MotorsHomed motors_homed = 18;
+        LogEntry log_entry = 19;
+    }
+}
