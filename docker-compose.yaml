@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  neo-calibration-tool-server:
+    image: neo-calibration-tool-server:latest
+    container_name: neo-calibration-tool-server
+    restart: unless-stopped
+    stdin_open: true
+    network_mode: "host"
+    ports:
+      - "50051:50051"
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"
+    environment:
+      HBC_IP: "10.10.10.2"
+      HBC_PORT: "10002"
+      PBC_IP: "10.10.10.3"
+      PBC_PORT: "10002"
+      DB_HOST: "127.0.0.1"
+      DB_PORT: "5432"
+    volumes:
+      - ./logs:/var/log/calserver
